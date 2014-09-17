@@ -1,0 +1,124 @@
+FORMAT: 1A
+HOST: http://iitest.api.youxiamotors.com/
+
+# 游侠汽车用户 API
+游侠汽车用户 API 用于向用户提供控制汽车以及查询汽车信息的功能。
+
+请注意，在访问这些接口的时候，服务器会设置一些 cookies，用于记录会话信息。请务必保存和回传这些 cookies。如果忽略 cookies，会导致一些奇怪的问题，如在发送注册短信的时候总是提示“验证码错误”。
+
+一般情况下，接口返回的消息均为 JSON 格式，其结构如下：
+
+    {
+        "code": 0,  /** 状态码 0 表示操作成功，如果非 0 则表示操作失败，message 属性中会包含错误描述 */
+        "message": "成功时可能包含一些成功描述信息，如果出错的话会包含错误描述信息",
+        "data": {}  /** 一些额外的数据 */
+    }
+
+code 属性值代表的意义在下表中列出：
+
+| code   |      描述       | 
+|----------|:------------- |
+| 0         | 操作正常完成 |
+| -10001    | 密码不正确   |
+| -10002    | 手机号码非法 |
+
+
+
+# Group 注册
+
+注册相关接口共有三个，分别是
+
+* 创建账户 `/register/create`
+* 获取注册短信验证码 `/register/vericode`
+* 获取“获取注册短信验证码”的验证码 `/register/captcha`
+
+一个典型的注册过程如下：
+
+1. 收集用户信息 ( 向用户显示注册表单 )
+1. 要求发送注册短信验证码 ( `/register/vericode` )
+1. 如果服务器返回无法发送注册短信验证码，就获取“获取注册短信验证码”的图形验证码，然后尝试重新要求服务器发送短信验证码 ( `/register/captcha` )
+1. 将短信验证码和用户信息提交给服务器进行注册 ( `/register/create` )
+
+其中一个特殊之处是，调用 /register/vericode 接口时不一定需要提供 captcha 参数，也就是说不需要用户输入验证码。只有当服务器返回失败的时候，才需要提供 captcha 参数，也就是说这时候才需要用户输入验证码。
+这样就可以让大部分用户在注册的时候不需要输入验证码，有助于提高用户体验。
+
+一般来说，只有当某个 IP 短时间内频繁访问 /register/vericode 接口时，来自这个 IP 的用户才需要输入图形验证码。
+
+用户注册之后可以与自己的汽车进行关联，也可以获得对他人汽车的使用授权。
+
+### GET /register/create?cellphone={cellphone}&email={email}&password={password}&name={name}&vericode={vericode}
+
+**创建账户**
+
+将用户注册信息提供给服务器，创建用户账户。
+
++ Parameters
+    + cellphone (<string>, `13800138000`) ... 用户手机号码，注册成功之后没有关联汽车的用户可以使用手机通过收取短信的方式找回密码
+    + email (optional,<string>,`user@example.com`) ... 用户的电子邮件地址
+    + password (<string>, `123456abcd`) ... 用户的账户密码
+    + name  (<string>, optional, `nickname`) ... 用户昵称
+    + vericode (<string>, required, `901384`) ... 注册短信验证码，注册前需要向手机发送短信验证码，确认手机号码之后才能创建账户
+    
++ Request (application/x-www-form-urlencoded)
+    
++ Response 200 (application/json)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+    + Body
+    
+            {
+                "code": 0
+                "message": "用户注册成功"
+            }
+        
+
+### GET /register/vericode?cellphone={cellphone}&captcha={captcha}
+
+**获取注册短信验证码**
+
+用户注册的时候需要验证手机号码，可以通过此接口要求系统向用户手机发送短信验证码。
+
++ Parameters
+    + cellphone (<string>, `13800138000`) ... 用于接收注册短信验证码的手机号码
+    + captcha (<string>, optional, `ab3x`) ... 为了防止短信接口被滥用，用户有可能需要输入验证码后才能获取注册验证码短信。一般情况下不需要用户输入验证码就能发送注册短信，但如果接口返回无法发送验证码之类的错误，请要求用户输入验证码，然后再次调用此接口。
+    
++ Request (application/x-www-form-urlencoded)
+    
++ Response 200 (application/json)
+
+    + Header
+    
+            Set-Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7; path=/
+
+    + Body
+
+            {
+                "code": 0,  /** 如果不为 0,可以尝试要求用户输入验证码之后再重新请求此接口 */
+                "message": "注册验证码短信发送成功",
+                "data": {
+                    "cooldown": 120  /** 需要等待多少秒后才能再次要求发送短信 */
+                }
+            }
+        
+
+### GET /register/captcha
+
+**获取“获取注册短信验证码”的验证码**
+
+为了防止短信接口被滥用，在某些情况下，获取注册验证短信时需要输入图形验证码，可以通过这个接口来获取图形验证码图片，并将验证码图片展现给用户。
+
++ Request (text/html)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+    
++ Response 200 (image/png)
+
+
+
+
+
