@@ -140,7 +140,7 @@ code 属性值代表的意义在下表中列出：
 + Parameters
     + cellphone (<string>, `13800138000`) ... 用户手机号码
     + password (<string>, `123456abcd`) ... 用户的密码明文
-    + captcha (<string>, required, `4a3b`) ... 图形验证码，一般情况下不需要发送图形验证码，当服务器认为有人恶意攻击时，会要求输入图形验证码
+    + captcha (<string>, optional, `4a3b`) ... 图形验证码，一般情况下不需要发送图形验证码，当服务器认为有人恶意攻击时，会要求输入图形验证码
     
 + Request (application/x-www-form-urlencoded)
     
@@ -203,6 +203,60 @@ code 属性值代表的意义在下表中列出：
             }
         
 
+
+### GET /session/history?no={no}&limit={limit}&order={order}
+
+**获取登录历史**
+
+获取用户的历史登录记录，每次最多可以获取 100 条记录。
+
+该接口须要登录之后才能使用。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几条记录开始获取，第一条记录的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的记录数量
+    + order = `desc` (<int>, optional, `asc`) ... 登录历史列表按照时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Header
+    
+            Set-Cookie: sid=; expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=-1
+            
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 113,   /** 用户登录记录总数 */
+                    "no": 11,
+                    "limit": 2,
+                    "history": [
+                        {
+                            "successed": 1,         /** 登录是否成功，1=成功，0=失败 */
+                            "time": 1411032503,     /** 登录时间，格式为 UNIX 时间戳 */
+                            "source": "api",        /** 登录来源 */
+                            "ip": "118.158.55.64"   /** 客户端 IP 地址 */
+                        },
+                        {
+                            "successed": 1,         /** 登录是否成功，1=成功，0=失败 */
+                            "time": 1411031100,     /** 登录时间，格式为 UNIX 时间戳 */
+                            "source": "api",        /** 登录来源 */
+                            "ip": "118.158.55.64"   /** 客户端 IP 地址 */
+                        }
+                    ]
+                }
+            }
+        
 
 
 
