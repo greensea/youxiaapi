@@ -125,4 +125,97 @@ code 属性值代表的意义在下表中列出：
             Set-Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7; path=/
 
 
+# Group 会话（登录和注销）
+
+### GET /session/login?cellphone={cellphone}&&password={password}&captcha={captcha}
+
+**登录**
+
+进行用户登录操作，只有登录之后才能进行其他针对汽车和账户的操作。
+
+会话信息是保存在 cookies 中的，所以请务必保存服务器返回的 cookies，在向服务器发送请求时，也应该发送 cookies.
+
+一般情况下，登录的时候不需要输入图形验证码。但如果服务器认为当前有人正在进行恶意攻击，就会要求输入图形验证码，在这种情况下，该接口会返回“需要输入图形验证码”的错误信息，用户只需要访问 `/session/captcha` 接口获取验证码，输入验证码之后再次提交登录请求即可。
+
++ Parameters
+    + cellphone (<string>, `13800138000`) ... 用户手机号码
+    + password (<string>, `123456abcd`) ... 用户的密码明文
+    + captcha (<string>, required, `4a3b`) ... 图形验证码，一般情况下不需要发送图形验证码，当服务器认为有人恶意攻击时，会要求输入图形验证码
+    
++ Request (application/x-www-form-urlencoded)
+    
++ Response 200 (application/json)
+
+    + Header
+    
+            Set-Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7; path=/
+            
+    + Body
+    
+            {
+                "code": 0,
+                "message": "登录成功"
+            }
+        
+
+### GET /session/captcha
+
+**获取登录图形验证码**
+
+获取登录时需要输入的图形验证码。
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 200 (image/png)
+
+    + Header
+    
+            Set-Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7; path=/
+
+
+### GET /session/logout
+
+**注销**
+
+注销，即退出登录。虽然理论上来说，要注销会话只需要将本地的 cookies 删除即可，但出于安全考虑，我们还是建议先访问此接口，再将本地的 cookies 删除。
+
++ Request (application/x-www-form-urlencoded)
+    
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 200 (application/json)
+
+    + Header
+    
+            Set-Cookie: sid=; expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=-1
+            
+    + Body
+    
+            {
+                "code": 0,
+                "message": "注销成功"
+            }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
