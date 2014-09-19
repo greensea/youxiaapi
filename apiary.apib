@@ -417,6 +417,33 @@ code 属性值代表的意义在下表中列出：
         
 
 
+# Group 绑定汽车（Car Binding）
+
+### GET /bind/bind?serial_no={serial_no}
+
+**创建授权**
+
+用户在购买汽车之后，应立即使用汽车序列号将汽车与自己的账号进行绑定。汽车序列号印制在汽车上（初步决定以二维码方式印制序列号）。
+
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 要绑定的汽车序列号
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+    
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "绑定汽车操作成功"
+            }
+        
 
 
 
