@@ -227,7 +227,7 @@ code 属性值代表的意义在下表中列出：
 
     + no = `1` (<int>, optional, `11`) ... 从第几条记录开始获取，第一条记录的序号是 1
     + limit = `10` (<int>, optional, `10`) ... 要获取的记录数量
-    + order = `desc` (<int>, optional, `asc`) ... 登录历史列表按照时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 
+    + order = `desc` (<int>, optional, `asc`) ... 登录历史列表按照时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
 
 + Request (application/x-www-form-urlencoded)
 
@@ -238,10 +238,6 @@ code 属性值代表的意义在下表中列出：
 
 + Response 200 (application/json)
 
-    + Header
-    
-            Set-Cookie: sid=; expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=-1
-            
     + Body
     
             {
@@ -345,9 +341,49 @@ code 属性值代表的意义在下表中列出：
         
 
 
+### GET /authorization/list?no={no}&limit={limit}&order={order}&serial_no={serial_no}
 
+获取用户名下汽车的授权记录列表
 
++ Parameters
 
+    + no = `1` (<int>, optional, `11`) ... 从第几条记录开始获取，第一条记录的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的记录数量
+    + order = `desc` (<int>, optional, `asc`) ... 授权记录列表按照授权时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+    + serial_no = `` (<string>, optional, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 如果指定了汽车序列号，则只列出有关该汽车的授权记录
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 113,   /** 授权记录总数 */
+                    "no": 11,
+                    "limit": 1,
+                    "history": [
+                        {
+                            "authorization_id": 76
+                            "serial_no": "25b0b035-766a-49b1-8cd8-ceabb26f96d2",    /** 授权的汽车序列号 */ 
+                            "cellphone": 13800138001,   /** 受权人的手机号码 */
+                            "effective": true,          /** 授权是否有效，如果授权已被撤销或已经超过授权时间，则授权无效，否则授权有效 */
+                            "expire_time": 1411197724,  /** 授权到期时间，格式为 UNIX 时间戳 */
+                            "ctime": 1411112304,        /** 授权记录创建时间 */
+                            "rtime": null,              /** 授权被撤销的时间，如果为 null 表示授权没有被撤销，否则表示授权已经被撤销了，格式为 UNIX 时间戳 */
+                        }
+                    ]
+                }
+            }
+        
 
 
 
