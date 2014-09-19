@@ -276,7 +276,7 @@ code 属性值代表的意义在下表中列出：
 
 ### GET /authorization/create?cellphone={cellphone}&&serial_no={password}&duration={duration}&expiration={expiration}
 
-**登录**
+**创建授权**
 
 将汽车的使用权授予其他用户。
 
@@ -290,9 +290,9 @@ code 属性值代表的意义在下表中列出：
 
 + Parameters
     + cellphone (<string>, `13800138000`) ... 受权用户的手机号码
-    + serial_no (<string>, `123456abcd`) ... 要授权的汽车的序列号
-    + duration (<string>, optional, `4a3b`) ... 授权时长，单位为秒。受权用户只能在接下来的这么长的时间内使用汽车
-    + expiration (<string>, optional, `4a3b`) ... 授权截止期，格式为 UNIX 时间戳。受权用户只能在这个时间之前使用汽车
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 要授权的汽车的序列号
+    + duration (<string>, optional, `86400`) ... 授权时长，单位为秒。受权用户只能在接下来的这么长的时间内使用汽车
+    + expiration (<string>, optional, `1411197724`) ... 授权截止期，格式为 UNIX 时间戳。受权用户只能在这个时间之前使用汽车
     
 + Request (application/x-www-form-urlencoded)
 
@@ -306,15 +306,44 @@ code 属性值代表的意义在下表中列出：
     
             {
                 "code": 0,
-                "message": "授权成功"
+                "message": "授权成功",
                 "data": {
+                    "authorization_id": 118869, /// 授权记录编号
                     "cellphone": 13800138001,   /// 受权用户的手机号码
                     "serial_no": "25b0b035-766a-49b1-8cd8-ceabb26f96d2",    /// 授权的汽车的序列号
-                    "duration": 1000,           /// 授权时长
-                    "expiration": 1234567890    /// 授权到期时间
+                    "duration": 86400,           /// 授权时长
+                    "expiration": 1411197724    /// 授权到期时间
                 }
             }
         
+
+
+
+### GET /authorization/delete?authorization_id={authorization_id}
+
+**撤销授权**
+
+撤销曾经授予给其他用户的汽车使用授权。
+
++ Parameters
+    + authorization_id (<string>, `118869`) ... 授权编号
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+    
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "授权撤销成功"
+            }
+        
+
 
 
 
