@@ -343,14 +343,16 @@ code 属性值代表的意义在下表中列出：
 
 ### GET /authorization/list?no={no}&limit={limit}&order={order}&serial_no={serial_no}
 
-获取用户名下汽车的授权记录列表
+获取用户名下汽车的授权记录列表。
+
+每次最多只能获取 100 条记录。
 
 + Parameters
 
     + no = `1` (<int>, optional, `11`) ... 从第几条记录开始获取，第一条记录的序号是 1
     + limit = `10` (<int>, optional, `10`) ... 要获取的记录数量
     + order = `desc` (<int>, optional, `asc`) ... 授权记录列表按照授权时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
-    + serial_no = `` (<string>, optional, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 如果指定了汽车序列号，则只列出有关该汽车的授权记录
+    + serial_no = `` (<string>, optional, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 如果指定了汽车序列号，则只列出有关该汽车的授权记录，否则列出用户名下所有汽车的授权记录
 
 + Request (application/x-www-form-urlencoded)
 
