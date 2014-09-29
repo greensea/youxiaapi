@@ -511,3 +511,25 @@ code 属性值代表的意义在下表中列出：
 
 
 
+
+
+# Group 杂项（Miscellaneous）
+
+### GET /misc/qrcode/bind?serial_no={serial_no}
+
+**提示用户绑定汽车的二维码**
+
+该接口会返回一个图片，图片是一个二维码，二维码的内容是一个 URL：
+
+http://www.youxiamotors.com/download/app.html?id={serial_no}
+
+URL 中的 serial_no 会被替换为请求参数中的 serial_no
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 要绑定的汽车序列号
+    
++ Request (application/x-www-form-urlencoded)
+
++ Response 200 (image/png)
+
+
