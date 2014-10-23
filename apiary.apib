@@ -504,7 +504,7 @@ code 属性值代表的意义在下表中列出：
 
 ### GET /app/trigger/installed
 
-**用户安装应用的触发器**
+**用户安装应用后的触发器**
 
 在用户成功下载并安装一个应用后，设备应该通过此接口向服务器回报。服务器会记录用户的安装记录，如果日后该应用改为收费，已经安装过此应用的用户仍然可以免费重新安装。
 
@@ -527,6 +527,34 @@ code 属性值代表的意义在下表中列出：
                 "code": 0,
                 "message": "应用触发器执行成功"
             }
+
+
+### GET /app/trigger/uninstalled
+
+**用户卸载应用后的触发器**
+
+在用户卸载一个应用后，设备应该通过此接口向服务器回报。
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 被卸载了应用的汽车的汽车序列号
+    + identifier (<string>, `com.example.application`) ... 被卸载的应用的标识符
+    + version (<string>, `1.0`) ... 被卸载的应用的版本
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "应用触发器执行成功"
+            }
+
 
 
 
