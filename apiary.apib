@@ -502,6 +502,42 @@ code 属性值代表的意义在下表中列出：
 
 `app/trigger/*` 类接口是应用触发器接口。在用户对应用进行操作（如安装应用、卸载应用）后，设备应该通过这些接口向服务器回报。
 
+## 一般接口
+
+### GET /app/download
+
+**下载应用的接口**
+
+安装应用前，需要下载应用，设备可以调用此接口来下载应用。一般来说，设备不需要为此接口编写代码，设备可以在应用信息接口 `app/get` 或 `app/list` 中获取应用的下载地址。
+
+如果用户没有安装指定应用的权限，下载就会失败，服务器会返回 HTTP 403 错误和用于说明错误的 JSON 信息。
+
+如果应用不存在，下载就会失败，服务器会返回 HTTP 404 和用于说错误的 JSON 消息。
+
++ Parameters
+    + identifier (<string>, `com.example.application`) ... 安装的应用的标识符
+    + version (<string>, `1.0`) ... 安装应用的版本
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 403 (application/json)
+
+    + Body
+    
+            {
+                /** 这是用户无权下载时服务器返回的内容，如果可以下载，服务器将直接返回文件的二进制内容（就像普的下载一样） */
+                "code": -10017,
+                "message": "您不能下载此应用"
+            }
+
+
+
+## 触发器类接口
+
 ### GET /app/trigger/installed
 
 **用户安装应用后的触发器**
