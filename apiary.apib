@@ -502,7 +502,6 @@ code 属性值代表的意义在下表中列出：
 
 `app/trigger/*` 类接口是应用触发器接口。在用户对应用进行操作（如安装应用、卸载应用）后，设备应该通过这些接口向服务器回报。
 
-## 一般接口
 
 ### GET /app/download
 
@@ -585,6 +584,42 @@ code 属性值代表的意义在下表中列出：
                             "mtime": 0,                             /** 应用最后修改时间 */
                             "bin_file": "http:\/\/test.api.youxiamotors.com\/app\/download?identifier=com.my.application&version=1.4"       /** 应用安装包下载地址 */
                         }
+                    ]
+                }
+            }
+
+
+
+### GET /app/top/latest?no={no}&limit={limit}&category={category}
+
+获取最近刚刚上架的应用，最新更新的应用排在前面。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个应用开始获取，第一条个应用的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的应用数量
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的应用排行，否则列出所有应用排行
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "apps": [
+                        /** 该数组的内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
                     ]
                 }
             }
