@@ -547,7 +547,7 @@ code 属性值代表的意义在下表中列出：
     + no = `1` (<int>, optional, `11`) ... 从第几个应用开始获取，第一条个应用的序号是 1
     + limit = `10` (<int>, optional, `10`) ... 要获取的应用数量
     + order = `desc` (<int>, optional, `asc`) ... 应用列表按照添加时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
-    + category = `` (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的应用，否则列出所有应用
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的应用，否则列出所有应用
 
 + Request (application/x-www-form-urlencoded)
 
@@ -597,8 +597,8 @@ code 属性值代表的意义在下表中列出：
 
 + Parameters
 
-    + identifier = `1` (<string>, optional, `com.my.application`) ... 应用标识符
-    + version = `10` (<string>, optional, `1.3`) ... 要获取的应用版本，如果省略，则返回应用的最新版本
+    + identifier (<string>, required, `com.my.application`) ... 应用标识符
+    + version (<string>, required, `1.3`) ... 要获取的应用版本，如果省略，则返回应用的最新版本
 
 + Request (application/x-www-form-urlencoded)
 
@@ -634,8 +634,71 @@ code 属性值代表的意义在下表中列出：
             }
 
 
+### GET /app/review/create?identifier={identifier}&version={version}&score={score}&comment={comment}
 
-## 触发器类接口
+为一个应用打分并进评论。如果曾经为同一个应用的同一个版本进行评分，则新的评分会取代旧的评分。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 应用标识符
+    + version (<string>, optional, `1.3`) ... 要评分的应用版本，如果省略，则对最新版本进行评分
+    + score (<int>, required, `4`) ... 给应用的分数
+    + comment (<string>, optional, `这个应用不错`) ... 给应用的评论
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 应用唯一标识符 */
+                    "version": "1.4",                       /** 应用版本号 */
+                    "score" : 3.5,                          /** 给应用评分后，应用的得分 */
+                }
+            }
+
+
+
+### GET /app/review/get?identifier={identifier}&version={version}
+
+获取用户给应用的评分信息。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 应用标识符
+    + version (<string>, optional, `1.3`) ... 要评分的应用版本，如果省略，则获取用户给该应用评分过的版本中，应用版本最新的评分
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 应用唯一标识符 */
+                    "version": "1.4",                       /** 应用版本号 */
+                    "score" : 3.5,                          /** 给应用评分后，应用的得分 */
+                }
+            }
+
+
 
 ### GET /app/trigger/installed
 
