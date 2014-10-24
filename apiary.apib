@@ -536,6 +536,61 @@ code 属性值代表的意义在下表中列出：
 
 
 
+### GET /app/list?no={no}&limit={limit}&order={order}&category={category}
+
+获取应用列表。
+
+每次最多只能获取 100 条记录。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个应用开始获取，第一条个应用的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的应用数量
+    + order = `desc` (<int>, optional, `asc`) ... 应用列表按照添加时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+    + category = `` (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的应用，否则列出所有应用
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "apps": [
+                        {
+                            "identifier": "com.my.application",     /** 应用唯一标识符 */
+                            "version": "1.4",                       /** 应用版本号 */
+                            "name": "我的应用",                     /** 应用名字 */
+                            "description": "我的应用的描述",        /** 应用说明 */
+                            "category": "测试分类2(改）",           /** 应用所属分类 */           
+                            "headline_img": "\/\/test.api.youxiamotors.com\/upload\/uploaded\/ba\/cf\/e202244f47a651203dd7ddb3d2ba.png",    /** 题图图片地址 */
+                            "preview_img": [                        /** 预览图片地址，预览图片有多张，因此是一个数组 */
+                                "\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png",
+                                "\/\/test.api.youxiamotors.com\/upload\/uploaded\/e3\/60\/34eb58b729afa6027150f520caf8.png"
+                            ],
+                            "price": 1.99,                          /** 应用售价，如果为 0 则表示这是免费应用 */
+                            "score": 0,                             /** 应用当前的用户评分 */
+                            "ctime": 1414053811,                    /** 应用创建时间 */
+                            "mtime": 0,                             /** 应用最后修改时间 */
+                            "bin_file": "http:\/\/test.api.youxiamotors.com\/app\/download?identifier=com.my.application&version=1.4"       /** 应用安装包下载地址 */
+                        }
+                    ]
+                }
+            }
+
+
+
 ## 触发器类接口
 
 ### GET /app/trigger/installed
