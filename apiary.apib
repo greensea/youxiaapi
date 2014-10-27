@@ -619,10 +619,7 @@ code 属性值代表的意义在下表中列出：
                     "no": 1,
                     "limit": 10,
                     "apps": [
-                        {
-                            install_num: 1027,
-                            /** 该对象中的其他内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
-                        }
+                        /** 该数组的内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
                     ]
                 }
             }
@@ -697,11 +694,49 @@ code 属性值代表的意义在下表中列出：
                     "no": 1,
                     "limit": 10,
                     "apps": [
-                        /** 该数组的内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
+                        {
+                            install_num: 1027,
+                            /** 该对象中的其他内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
+                        }
                     ]
                 }
             }
 
+
+
+### GET /app/history?no={no}&limit={limit}&identifier={identifier}
+
+获取一个应用的历史版本信息（仅显示状态为正常的旧版本），新版本显示在前面。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个版本开始获取，最新版本的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的历史版本数量
+    + identifier (<string>, required, `com.example.application`) ... 应用的唯一标识符
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "apps": [
+                        /** 应用的历史版本列表，该数组的内容和 `app/list` 接口中 apps 域的内容完全相同，具体请参考 `app/list` 接口 */
+                    ]
+                }
+            }
 
 
 
@@ -746,6 +781,47 @@ code 属性值代表的意义在下表中列出：
                     "bin_file": "http:\/\/test.api.youxiamotors.com\/app\/download?identifier=com.my.application&version=1.4"       /** 应用安装包下载地址 */
                 }
             }
+
+
+### GET /app/category/list?no={no}&limit={limit}
+
+获取应用的分类列表。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个分类开始获取，第一个分类的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的分类的数量
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 2,
+                    "no": 1,
+                    "limit": 10,
+                    "categories": [
+                        {
+                            "name": "媒体娱乐"
+                        },
+                        {
+                            "name": "系统工具"
+                        }
+                    ]
+                }
+            }
+
+
 
 
 ### GET /app/review/create?identifier={identifier}&version={version}&score={score}&comment={comment}
@@ -811,6 +887,9 @@ code 属性值代表的意义在下表中列出：
                     "score" : 3.5,                          /** 给应用评分后，应用的得分 */
                 }
             }
+
+
+
 
 
 
