@@ -893,6 +893,49 @@ code 属性值代表的意义在下表中列出：
 
 
 
+### GET /app/headline/list?no={no}&limit={limit}
+
+获取所有应用头条的列表。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个分类开始获取，第一个分类的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的分类的数量
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 2,
+                    "no": 1,
+                    "limit": 10,
+                    "headlines": [
+                        {
+                            "internal_name": "featured",    /** 头条内部唯一名字 **/
+                            "display_name": "推荐应用"     /** 对用户显示的头条名字 **/
+                        },
+                        {
+                            "internal_name": "test",
+                            "display_name": "测试头条"  
+                        }
+                    ]
+                }
+            }
+
+
+
+
 
 
 ### GET /app/trigger/installed
