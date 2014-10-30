@@ -886,7 +886,7 @@ code 属性值代表的意义在下表中列出：
                 "data": {
                     "identifier": "com.my.application",     /** 应用唯一标识符 */
                     "version": "1.4",                       /** 应用版本号 */
-                    "score" : 3.5,                          /** 给应用评分后，应用的得分 */
+                    "score" : 3.5                          /** 给应用评分后，应用的得分 */
                 }
             }
 
@@ -899,8 +899,8 @@ code 属性值代表的意义在下表中列出：
 
 + Parameters
 
-    + no = `1` (<int>, optional, `11`) ... 从第几个分类开始获取，第一个分类的序号是 1
-    + limit = `10` (<int>, optional, `10`) ... 要获取的分类的数量
+    + no = `1` (<int>, optional, `11`) ... 从第几个头条开始获取，第一个分类的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的头条的数量
 
 + Request (application/x-www-form-urlencoded)
 
@@ -933,6 +933,35 @@ code 属性值代表的意义在下表中列出：
                 }
             }
 
+
+
+
+### GET /app/headline/get?internal_name={internal_name}
+
+获取所有应用头条的列表。
+
++ Parameters
+
+    + internal_name  (<string>, required, `featured`) ... 要获取的应用头条的内部名字
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    /* TODO: 待补完
+                }
+            }
 
 
 
