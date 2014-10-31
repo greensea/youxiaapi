@@ -959,7 +959,12 @@ code 属性值代表的意义在下表中列出：
                 "code": 0,
                 "message": "操作成功",
                 "data": {
-                    /* TODO: 待补完
+                            "internal_name": "featured",    /** 头条内部唯一名字 **/
+                            "display_name": "编辑推荐",     /** 对用户显示的头条名字 **/
+                            "ctime": "1234567890",          /** 头条创建时间 **/
+                            "apps": [
+                                /** 这里的内容和 app/list 接口返回的 apps 域内的内容完全相同，具体内容请参考 app/list 接口 **/
+                            ]
                 }
             }
 
