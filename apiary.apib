@@ -1025,6 +1025,36 @@ code 属性值代表的意义在下表中列出：
                 "message": "应用触发器执行成功"
             }
 
+# Group 购买应用（App Order）
+
+### GET /app/order/purchase?identifier={identifier}
+
+购买一个应用。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 要购买的应用的标识符
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "订单创建成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 应用唯一标识符 **/
+                    "qrcode": "https:\/\/qr.alipay.com\/6178318465410007040",   /** 扫码购买应用的二维码数据 **/
+                    "qrcode_img_url": "https:\/\/qr.alipay.com\/paipai\/show.htm?code=6178318465410007040"  /** 扫码购买应用的二维码图片地址 **/
+                }
+            }
 
 
 
