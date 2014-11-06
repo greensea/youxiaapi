@@ -1025,7 +1025,7 @@ code 属性值代表的意义在下表中列出：
                 "message": "应用触发器执行成功"
             }
 
-# Group 购买应用（App Order）
+# Group 应用订单（App Order）
 
 ### GET /app/order/purchase?identifier={identifier}
 
@@ -1055,6 +1055,120 @@ code 属性值代表的意义在下表中列出：
                     "qrcode_img_url": "https:\/\/qr.alipay.com\/paipai\/show.htm?code=6178318465410007040"  /** 扫码购买应用的二维码图片地址 **/
                 }
             }
+
+
+### GET /app/order/orders?no={no}&limit={limit}&identifier={identifier}&order={order}
+
+获取历史应用订单列表。该接口仅返回成功、待确认和待支付的订单。
+
+返回结果中的 status 字段表示订单状态，订单状态值及其含义如下表所示：
+
+| 状态值     |      含义     | 
+|-----------| :----------- |
+| init      | 操作正常完成   |
+| waiting   | 密码不正确     |
+| success   | 手机号码非法   |
+| failure   | 缺少必传参数   |
+| closed    | 订单已被关闭   |
+
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个订单开始获取，第一条订单的 no 为 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的订单数量，每次最多只能获取 100 条订单
+    + identifier (<string>, optional, `com.example.application`) ... 如果不传此参数，则返回所有订单，否则只返回指定应用的购买订单
+    + order = `asc` (<int>, optional, `desc`) ... 订单列表按照创建时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 2,
+                    "no": 1,
+                    "limit": 10,
+                    "orders": [
+                        {
+                            "order_id": "6",        /** 订单号 */
+                            "price": 3.99,          /** 订单价格（用户应付款） **/
+                            "ctime": 1415168385,    /** 订单创建时间，UNIX 时间戳 **/
+                            "mtime": 1415168404,    /** 订单最后修改时间，UNIX 时间戳 **/
+                            "status": "success",    /** 订单状态 **/
+                            "identifier": "com.example.myapplication2",  /** 购买的应用的标识符 **/
+                            "version": "1.4"        /** 购买应用的版本 **/
+                        },
+                        {
+                            "order_id": "1",
+                            "price": 1.99,
+                            "ctime": 1415160382,
+                            "mtime": 1415167482,
+                            "status": "success",
+                            "identifier": "com.my.application",
+                            "version": "1.0"
+                        }
+                    ]
+                }
+            }
+
+
+### GET /app/order/payments?no={no}&limit={limit}&identifier={identifier}&order={order}
+
+获取购买应用的支付记录。仅返回待确认、待支付、成功和失败的支付记录。
+
+返回结果中的 status 表示订单状态，状态值及其含义与 `app/order/orders` 接口中的 status 字段相同，详情请参考 `app/order/orders` 接口。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个支付记录开始获取，第一条支付记录的 no 为 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的支付记录的数量，每次最多只能获取 100 条支付记录
+    + identifier (<string>, optional, `com.example.application`) ... 如果不传此参数，则返回所有支付记录，否则只返回指定应用的购买支付记录
+    + order = `asc` (<int>, optional, `desc`) ... 支付记录列表按照创建时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "payments": [
+                       {
+                            "order_id": "26",       /** 支付记录对应的订单号 **/
+                            "gateway": "alipay",    /** 支付平台 **/
+                            "price": 3.99,          /** 应付款 **/
+                            "amount": 0,            /** 实收款 **/
+                            "ctime": 1415168390,    /** 支付记录创建时间，UNIX 时间戳 **/
+                            "mtime": 1415168390,    /** 支付记录最后修改时间，UNIX 时间戳 **/
+                            "status": "init",       /** 支付记录状态 **/
+                            "identifier": "com.example.myapplication2", /** 支付记录对应的应用的标识符 **/
+                            "version": "1.0"        /** 支付记录对应的应用的版本 **/
+                        }
+                    ]
+                }
+            }
+
 
 
 
