@@ -769,10 +769,10 @@ code 属性值代表的意义在下表中列出：
                     "name": "我的应用",                     /** 应用名字 */
                     "description": "我的应用的描述",        /** 应用说明 */
                     "category": "媒体娱乐",                 /** 应用所属分类 */           
-                    "headline_img": "\/\/test.api.youxiamotors.com\/upload\/uploaded\/ba\/cf\/e202244f47a651203dd7ddb3d2ba.png",    /** 题图图片地址 */
+                    "headline_img": "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/ba\/cf\/e202244f47a651203dd7ddb3d2ba.png",    /** 题图图片地址 */
                     "preview_img": [                        /** 预览图片地址，预览图片有多张，因此是一个数组 */
-                        "\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png",
-                        "\/\/test.api.youxiamotors.com\/upload\/uploaded\/e3\/60\/34eb58b729afa6027150f520caf8.png"
+                        "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png",
+                        "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/e3\/60\/34eb58b729afa6027150f520caf8.png"
                     ],
                     "price": 1.99,                          /** 应用售价，如果为 0 则表示这是免费应用 */
                     "score": 4.1,                           /** 应用当前的用户评分 */
@@ -893,7 +893,7 @@ code 属性值代表的意义在下表中列出：
 
 
 
-### GET /app/headline/list?no={no}&limit={limit}
+### GET /app/headline/list?no={no}&limit={limit}&featured={featured}
 
 获取所有应用头条的列表。
 
@@ -901,6 +901,7 @@ code 属性值代表的意义在下表中列出：
 
     + no = `1` (<int>, optional, `11`) ... 从第几个头条开始获取，第一个分类的序号是 1
     + limit = `10` (<int>, optional, `10`) ... 要获取的头条的数量
+    + featured (<int>, optional, 1) ... 当传入 1 时，只返回会被显示在首页的头条；当传入 0 时，只返回不会在首页显示的头条；当不传此参数时，返回所有头条
 
 + Request (application/x-www-form-urlencoded)
 
@@ -923,11 +924,23 @@ code 属性值代表的意义在下表中列出：
                     "headlines": [
                         {
                             "internal_name": "featured",    /** 头条内部唯一名字 **/
-                            "display_name": "推荐应用"     /** 对用户显示的头条名字 **/
+                            "display_name": "推荐应用",      /** 对用户显示的头条名字 **/
+                            "headline_img": "",             /** 头条图片的 URL 地址，如果没有则为空 **/
+                            "featured": 1,                  /** 头条是否会在首页显示，1=会在首页显示，0=不会在首页显示 **/
+                            "ctime": "1234567890",          /** 头条创建时间 **/
+                            "apps": [
+                                /** 这里的内容和 app/list 接口返回的 apps 域内的内容完全相同，具体内容请参考 app/list 接口 **/
+                            ]
                         },
                         {
                             "internal_name": "test",
-                            "display_name": "测试头条"  
+                            "display_name": "测试头条",
+                            "featured": 1,
+                            "ctime": "1234567890",
+                            "headline_img": "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png"
+                            "apps": [
+                                /** 这里的内容和 app/list 接口返回的 apps 域内的内容完全相同，具体内容请参考 app/list 接口 **/
+                            ]
                         }
                     ]
                 }
@@ -961,6 +974,8 @@ code 属性值代表的意义在下表中列出：
                 "data": {
                             "internal_name": "featured",    /** 头条内部唯一名字 **/
                             "display_name": "编辑推荐",     /** 对用户显示的头条名字 **/
+                            "headline_img": "",             /** 头条图片的 URL 地址，如果没有则为空 **/
+                            "featured": 1,                  /** 头条是否会在首页显示，1=会在首页显示，0=不会在首页显示 **/
                             "ctime": "1234567890",          /** 头条创建时间 **/
                             "apps": [
                                 /** 这里的内容和 app/list 接口返回的 apps 域内的内容完全相同，具体内容请参考 app/list 接口 **/
