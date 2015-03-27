@@ -1216,7 +1216,7 @@ code 属性值代表的意义在下表中列出：
             }
 
 
-### POST /user/modify?plate_no={plate_no}&username={username}
+### POST /user/modify?plate_no={plate_no}&username={username}&portrait={portrait}
 
 修改当前登录用户的资料。
 
@@ -1224,6 +1224,7 @@ code 属性值代表的意义在下表中列出：
 
     + plate_no (<string>, optional, `某A 12345`) ... 用户自有车辆的车牌号
     + username (<string>, optional, `new_username`) ... 新用户名
+    + portrait (<binary>, optional) ... 用户头像数据。按照 HTTP 上传文件的标准进行传输
 
 + Request (application/x-www-form-urlencoded)
 
@@ -1241,7 +1242,8 @@ code 属性值代表的意义在下表中列出：
                 "message": "操作成功",
                 "data": {
                     "plate_no": "某A 12345",
-                    "username": "new_username"
+                    "username": "new_username",
+                    "portrait": "//img.domain.com/portrait.jpg" /** 用户头像地址 */
                 }
             }
 
