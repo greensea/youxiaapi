@@ -1216,7 +1216,7 @@ code 属性值代表的意义在下表中列出：
             }
 
 
-### GET /user/modify?plate_no={plate_no}&username={username}
+### POST /user/modify?plate_no={plate_no}&username={username}
 
 修改当前登录用户的资料。
 
@@ -1246,7 +1246,7 @@ code 属性值代表的意义在下表中列出：
             }
 
 
-### GET /user/resetpass?vericode={vericode}&password={password}&old_password={old_password}
+### POST /user/resetpass?vericode={vericode}&password={password}&old_password={old_password}
 
 重置用户密码。必须提供 vericode 或 old_password 参数。
 如果提供了正确的 old_password，则可以直接重置密码。
