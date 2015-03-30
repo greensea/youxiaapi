@@ -1188,7 +1188,7 @@ code 属性值代表的意义在下表中列出：
 
 # Group 用户相关（User）
 
-### GET /user/get?plate_no={plate_no}&username={username}
+### GET /user/get
 
 获取当前登录用户的资料。
 
@@ -1211,7 +1211,8 @@ code 属性值代表的意义在下表中列出：
                     "plate_no": "某A 12345",
                     "username": "new_username",
                     "cellphone": "13800138000",
-                    "score": 100
+                    "score": 100,
+                    "portrait": "//img.domain.com/portrait.jpg" /** 用户头像地址 */
                 }
             }
 
