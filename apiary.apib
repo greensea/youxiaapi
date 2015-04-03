@@ -1249,15 +1249,17 @@ code 属性值代表的意义在下表中列出：
             }
 
 
-### POST /user/resetpass?vericode={vericode}&password={password}&old_password={old_password}
+### POST /user/resetpass?cellphone={cellphone}vericode={vericode}&password={password}&old_password={old_password}
 
 重置用户密码。必须提供 vericode 或 old_password 参数。
 如果提供了正确的 old_password，则可以直接重置密码。
+如果提供了 vericode ，则必须同时提供 cellphone。
 vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接口要求发送手机验证码到用户的手机号码上。
 
 + Parameters
 
     + vericode (<string>, optional, `123456`) ... 通过手机找回密码时，手机短信中的验证码
+    + cellphone (<string>, optional, `13800138000`) ... 通过手机号码找回密码时，用户的手机号码
     + password (<string>, required, `cfOviboMbSsmQ`) ... 新密码
     + old_password (<string>, optional, `5FYCGpjMeVuqE`) ... 用户当前的密码
 
@@ -1279,9 +1281,16 @@ vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接�
 
 
 
-### GET /user/resetpass_vericode
+### GET /user/resetpass_vericode?name={name}&cellphone={cellphone}
 
 向用户手机发送找回密码的短信验证码。
+
+如果不提供任何参，则向当前登录用户绑定手机号码发送短信。
+
++ Parameters
+
+    + name (<string>, optional, `username`) ... 如果提供了用户名，则向该用户绑定的手机号码发送短信
+    + cellphone (<string>, optional, `13800138000`) ... 如果提供了手机号码，则向该手机号码发送短信
 
 
 + Request (application/x-www-form-urlencoded)
