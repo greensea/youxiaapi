@@ -1318,6 +1318,52 @@ vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接�
 
 
 
+# Group 汽车指令（Vehicle Command）
+
+### GET /vehicle/{serial_no}/command/{command}
+
+**向汽发送一条指令，并等待汽车响应**
+
+访问该接口后，服务器会向汽车发送消息类型为 {command} 的指令。汽车响应指令后，本接口会将汽车响应原封不动地输出。
+
+{command} 参数是汽车消息的名字，具体请参考：http://docs.youxiacarservercomm.apiary.io/#json
+
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 接收指令的汽车序列号
+    + command (<string>, `get_climate_state`) ... 消息名字
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+            
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "type": "get_climate_state_response",
+                "code": 0,
+                "param": {
+                    "reply_to": "36c210b00104.54081cf7.1aa1d.2ad268fe"
+                },
+                "data": {
+                    "inside_temp": 24.1,
+                    "outside_temp": 32.2,
+                    "driver_temp_setting": 24.0,
+                    "passenger_temp_setting": 24.0,
+                    "is_auto_conditiong_on": false,
+                    "is_front_defroster_on": false,
+                    "is_rear_defroster_on": false,
+                    "fan_status": 2
+                }
+            }
+
+
+
 # Group 杂项（Miscellaneous）
 
 ### GET /misc/qrcode/bind?serial_no={serial_no}
