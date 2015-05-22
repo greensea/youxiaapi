@@ -1363,6 +1363,42 @@ vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接�
             }
 
 
+# Group 微听（Weiting）
+
+### GET /weiting/tip?broadcast_id={broadcast_id}&program_id={identifier}
+
+给主播打赏。
+该接口会返回一个支付宝二维码，用户使用手机扫描二维码之后即可使用支付宝进支付。
+
++ Parameters
+
+    + broadcast_id (<int>, required, 12) ... 接受打赏的主播编号
+    + program_id (<int>, optional, 23) ... 接受打赏的节目编号
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "broadcast_id": 12, 
+                    "program_id": 23,
+                    "qrcode": "https:\/\/qr.alipay.com\/6178318465410007040",   /** 扫码支付的二维码的数据 **/
+                    "qrcode_img_url": "https:\/\/qr.alipay.com\/paipai\/show.htm?code=6178318465410007040"  /** 扫码支付的二维码图片地址 **/
+                }
+            }
+
+
+
 
 # Group 杂项（Miscellaneous）
 
