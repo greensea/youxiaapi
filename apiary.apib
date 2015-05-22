@@ -1365,7 +1365,7 @@ vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接�
 
 # Group 微听（Weiting）
 
-### GET /weiting/tip?broadcast_id={broadcast_id}&program_id={program_id}
+### GET /weiting/tip?broadcast_id={broadcast_id}&program_id={program_id}&amount={amount}&desc={desc}
 
 给主播打赏。
 
@@ -1375,6 +1375,8 @@ vericode 是手机短信验证码，可以通过 `/user/resetpass_vericode` 接�
 
     + broadcast_id (<int>, required) ... 接受打赏的主播编号
     + program_id (<int>, optional) ... 接受打赏的节目编号
+    + amount (<float>, required) ... 打赏金额，单位：人民币元
+    + desc (<string>, optional, `向XXX打赏YY元`) ... 关于本次打赏的一些说明
 
 + Request (application/x-www-form-urlencoded)
 
