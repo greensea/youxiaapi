@@ -1075,11 +1075,11 @@ code 属性值代表的意义在下表中列出：
             }
 
 
-### GET /app/order/orders?no={no}&limit={limit}&identifier={identifier}&order={order}
+### GET /app/order/orders?no={no}&limit={limit}&identifier={identifier}&order={order}&status={status}
 
 获取历史应用订单列表。该接口仅返回成功、待确认和待支付的订单。
 
-返回结果中的 status 字段表示订单状态，订单状态值及其含义如下表所示：
+返回结果及参数中的 status 字段表示订单状态，订单状态值及其含义如下表所示：
 
 | 状态值     |      含义     | 
 |-----------| :----------- |
@@ -1096,7 +1096,7 @@ code 属性值代表的意义在下表中列出：
     + limit = `10` (<int>, optional, `10`) ... 要获取的订单数量，每次最多只能获取 100 条订单
     + identifier (<string>, optional, `com.example.application`) ... 如果不传此参数，则返回所有订单，否则只返回指定应用的购买订单
     + order = `asc` (<int>, optional, `desc`) ... 订单列表按照创建时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
-
+    + status (<string>, optional, `success`) ... 订单状态
 
 + Request (application/x-www-form-urlencoded)
 
