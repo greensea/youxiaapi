@@ -1188,6 +1188,604 @@ code 属性值代表的意义在下表中列出：
             }
 
 
+# Group 主题（Skin）
+
+用户可以从主题商店中下载并安装主题和皮肤。对于付费的主题，用户需要购买后才能下载。
+
+`skin/trigger/*` 类接口是主题触发器接口。在用户对主题进行操作（如安装主题、卸载主题）后，设备应该通过这些接口向服务器回报。
+
+
+### GET /skin/download?identifier={identifier}&version={version}
+
+**下载主题的接口**
+
+安装主题前，需要下载主题，设备可以调用此接口来下载主题。一般来说，设备不需要为此接口编写代码，设备可以在主题信息接口 `skin/get` 或 `skin/list` 中获取主题的下载地址。
+
+如果用户没有安装指定主题的权限，下载就会失败，服务器会返回 HTTP 403 错误和用于说明错误的 JSON 信息。
+
+如果主题不存在，下载就会失败，服务器会返回 HTTP 404 和用于说错误的 JSON 消息。
+
++ Parameters
+    + identifier (<string>, `com.example.application`) ... 安装的主题的标识符
+    + version (<string>, `1.0`) ... 安装主题的版本
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 403 (application/json)
+
+    + Body
+    
+            {
+                /** 这是用户无权下载时服务器返回的内容，如果可以下载，服务器将直接返回文件的二进制内容（就像普的下载一样） */
+                "code": -10017,
+                "message": "您不能下载此主题"
+            }
+
+
+
+### GET /skin/list?no={no}&limit={limit}&order={order}&category={category}
+
+获取主题列表。
+
+每次最多只能获取 100 条记录。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个主题开始获取，第一条个主题的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的主题数量
+    + order = `desc` (<string>, optional, `asc`) ... 主题列表按照添加时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的主题，否则列出所有主题
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "skins": [
+                        {
+                            "identifier": "com.my.application",     /** 主题唯一标识符 */
+                            "version": "1.4",                       /** 主题版本号 */
+                            "name": "我的主题",                     /** 主题名字 */
+                            "description": "我的主题的描述",        /** 主题说明 */
+                            "category": "媒体娱乐",                 /** 主题所属分类 */           
+                            "headline_img": "\/\/test.api.youxiamotors.com\/upload\/uploaded\/ba\/cf\/e202244f47a651203dd7ddb3d2ba.png",    /** 题图图片地址 */
+                            "preview_img": [                        /** 预览图片地址，预览图片有多张，因此是一个数组 */
+                                "\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png",
+                                "\/\/test.api.youxiamotors.com\/upload\/uploaded\/e3\/60\/34eb58b729afa6027150f520caf8.png"
+                            ],
+                            "price": 1.99,                          /** 主题售价，如果为 0 则表示这是免费主题 */
+                            "score": 4.1,                             /** 主题当前的用户评分 */
+                            "ctime": 1414053811,                    /** 主题创建时间 */
+                            "mtime": 0,                             /** 主题最后修改时间 */
+                            "bin_file": "http:\/\/test.api.youxiamotors.com\/app\/download?identifier=com.my.application&version=1.4"       /** 主题安装包下载地址 */
+                        }
+                    ]
+                }
+            }
+
+
+
+### GET /skin/top/latest?no={no}&limit={limit}&category={category}
+
+获取最近刚刚上架的主题，最近更新的主题排在前面。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个主题开始获取，第一条个主题的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的主题数量
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的主题排行，否则列出所有主题排行
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "skins": [
+                        /** 该数组的内容和 `skin/list` 接口中 skins 域的内容完全相同，具体请参考 `skin/list` 接口 */
+                    ]
+                }
+            }
+
+
+
+### GET /skin/top/7d?no={no}&limit={limit}&category={category}
+
+获取 7 日内最热门的主题排行，主题越热门排名越靠前。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个主题开始获取，第一条个主题的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的主题数量
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的主题排行，否则列出所有主题排行
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "skins": [
+                        {
+                            install_num: 1027,
+                            /** 该对象中的其他内容和 `skin/list` 接口中 skins 域的内容完全相同，具体请参考 `skin/list` 接口 */
+                        }
+                    ]
+                }
+            }
+
+
+
+### GET /skin/top/24h?no={no}&limit={limit}&category={category}
+
+获取 24 小时内最热门的主题排行，主题越热门排名越靠前。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个主题开始获取，第一条个主题的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的主题数量
+    + category (<string>, optional, `媒体娱乐`) ... 如果指了分类，则只列出该分类下的主题排行，否则列出所有主题排行
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "skins": [
+                        {
+                            install_num: 1027,
+                            /** 该对象中的其他内容和 `skin/list` 接口中 skins 域的内容完全相同，具体请参考 `skin/list` 接口 */
+                        }
+                    ]
+                }
+            }
+
+
+
+### GET /skin/history?no={no}&limit={limit}&identifier={identifier}
+
+获取一个主题的历史版本信息（仅显示状态为正常的旧版本），新版本显示在前面。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个版本开始获取，最新版本的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的历史版本数量
+    + identifier (<string>, required, `com.example.application`) ... 主题的唯一标识符
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "skins": [
+                        /** 主题的历史版本列表，该数组的内容和 `skin/list` 接口中 skins 域的内容完全相同，具体请参考 `skin/list` 接口 */
+                    ]
+                }
+            }
+
+
+
+### GET /skin/get?identifier={identifier}&version={version}
+
+获取一个主题的信息。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 主题标识符
+    + version (<string>, required, `1.3`) ... 要获取的主题版本，如果省略，则返回主题的最新版本
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 主题唯一标识符 */
+                    "version": "1.4",                       /** 主题版本号 */
+                    "name": "我的主题",                     /** 主题名字 */
+                    "description": "我的主题的描述",        /** 主题说明 */
+                    "category": "现代",                 /** 主题所属分类 */           
+                    "headline_img": "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/ba\/cf\/e202244f47a651203dd7ddb3d2ba.png",    /** 题图图片地址 */
+                    "preview_img": [                        /** 预览图片地址，预览图片有多张，因此是一个数组 */
+                        "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/68\/a3\/782836125db6f91ff312a3a0cdd0.png",
+                        "http:\/\/test.api.youxiamotors.com\/upload\/uploaded\/e3\/60\/34eb58b729afa6027150f520caf8.png"
+                    ],
+                    "price": 1.99,                          /** 主题售价，如果为 0 则表示这是免费主题 */
+                    "score": 4.1,                           /** 主题当前的用户评分 */
+                    "ctime": 1414053811,                    /** 主题创建时间 */
+                    "mtime": 0,                             /** 主题最后修改时间 */
+                    "bin_file": "http:\/\/test.api.youxiamotors.com\/skin\/download?identifier=com.my.application&version=1.4"       /** 主题安装包下载地址 */
+                }
+            }
+
+
+### GET /skin/category/list?no={no}&limit={limit}
+
+获取主题的分类列表。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个分类开始获取，第一个分类的序号是 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的分类的数量
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 2,
+                    "no": 1,
+                    "limit": 10,
+                    "categories": [
+                        {
+                            "category_name": "现代",    /** 分类名字 **/
+                            "ctime": 1234567890             /** 分类创建时间 **/
+                        },
+                        {
+                            "category_name": "古典",
+                            "ctime": 1234567891
+                        }
+                    ]
+                }
+            }
+
+
+
+
+### GET /skin/review/create?identifier={identifier}&version={version}&score={score}&comment={comment}
+
+为一个主题打分并进评论。如果曾经为同一个主题的同一个版本进行评分，则新的评分会取代旧的评分。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 主题标识符
+    + version (<string>, optional, `1.3`) ... 要评分的主题版本，如果省略，则对最新版本进行评分
+    + score (<int>, required, `4`) ... 给主题的分数
+    + comment (<string>, optional, `这个主题不错`) ... 给主题的评论
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 主题唯一标识符 */
+                    "version": "1.4",                       /** 主题版本号 */
+                    "score" : 3.5,                          /** 给主题评分后，主题的得分 */
+                }
+            }
+
+
+
+### GET /skin/review/get?identifier={identifier}&version={version}
+
+获取用户给主题的评分信息。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 主题标识符
+    + version (<string>, optional, `1.3`) ... 要评分的主题版本，如果省略，则获取用户给该主题评分过的版本中，主题版本最新的评分
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 主题唯一标识符 */
+                    "version": "1.4",                       /** 主题版本号 */
+                    "score" : 3.5                          /** 给主题评分后，主题的得分 */
+                }
+            }
+
+
+
+
+
+
+### GET /skin/trigger/installed
+
+**用户安装主题后的触发器**
+
+在用户成功下载并安装一个主题后，设备应该通过此接口向服务器回报。服务器会记录用户的安装记录，如果日后该主题改为收费，已经安装过此主题的用户仍然可以免费重新安装。
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 安装了主题的汽车的汽车序列号
+    + identifier (<string>, `com.example.application`) ... 安装的主题的标识符
+    + version (<string>, `1.0`) ... 安装主题的版本
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "主题触发器执行成功"
+            }
+
+
+### GET /skin/trigger/uninstalled
+
+**用户卸载主题后的触发器**
+
+在用户卸载一个主题后，设备应该通过此接口向服务器回报。
+
++ Parameters
+    + serial_no (<string>, `25b0b035-766a-49b1-8cd8-ceabb26f96d2`) ... 卸载了主题的汽车的汽车序列号
+    + identifier (<string>, `com.example.application`) ... 被卸载的主题的标识符
+    + version (<string>, `1.0`) ... 被卸载的主题的版本
+    
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+            
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "主题触发器执行成功"
+            }
+
+# Group 主题订单（Skin Order）
+
+### GET /skin/order/purchase?identifier={identifier}
+
+购买一个主题。访问此接口时会为用户创建一个订单，用户可以使用支付宝扫码二维码对订单进行支付。支付成功之后用户就可以下载主题了。
+
++ Parameters
+
+    + identifier (<string>, required, `com.my.application`) ... 要购买的主题的标识符
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "订单创建成功",
+                "data": {
+                    "identifier": "com.my.application",     /** 主题唯一标识符 **/
+                    "qrcode": "https:\/\/qr.alipay.com\/6178318465410007040",   /** 扫码购买主题的二维码数据 **/
+                    "qrcode_img_url": "https:\/\/qr.alipay.com\/paipai\/show.htm?code=6178318465410007040"  /** 扫码购买主题的二维码图片地址 **/
+                }
+            }
+
+
+### GET /skin/order/orders?no={no}&limit={limit}&identifier={identifier}&order={order}&status={status}
+
+获取历史主题订单列表。该接口仅返回成功、待确认和待支付的订单。
+
+返回结果及参数中的 status 字段表示订单状态，订单状态值及其含义如下表所示：
+
+| 状态值     |      含义     | 
+|-----------| :----------- |
+| init      | 订单正在初始化   |
+| waiting   | 等待用户支付     |
+| success   | 用户已支付成功   |
+| failure   | 用户支付失败   |
+| closed    | 订单已被关闭   |
+
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个订单开始获取，第一条订单的 no 为 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的订单数量，每次最多只能获取 100 条订单
+    + identifier (<string>, optional, `com.example.application`) ... 如果不传此参数，则返回所有订单，否则只返回指定主题的购买订单
+    + order = `asc` (<int>, optional, `desc`) ... 订单列表按照创建时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+    + status (<string>, optional, `success`) ... 订单状态
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 2,
+                    "no": 1,
+                    "limit": 10,
+                    "orders": [
+                        {
+                            "order_id": "6",        /** 订单号 */
+                            "price": 3.99,          /** 订单价格（用户应付款） **/
+                            "ctime": 1415168385,    /** 订单创建时间，UNIX 时间戳 **/
+                            "mtime": 1415168404,    /** 订单最后修改时间，UNIX 时间戳 **/
+                            "status": "success",    /** 订单状态 **/
+                            "identifier": "com.example.myapplication2",  /** 购买的主题的标识符 **/
+                            "version": "1.4"        /** 购买主题的版本 **/
+                        },
+                        {
+                            "order_id": "1",
+                            "price": 1.99,
+                            "ctime": 1415160382,
+                            "mtime": 1415167482,
+                            "status": "success",
+                            "identifier": "com.my.application",
+                            "version": "1.0"
+                        }
+                    ]
+                }
+            }
+
+
+### GET /skin/order/payments?no={no}&limit={limit}&identifier={identifier}&order={order}
+
+获取购买主题的支付记录。仅返回待确认、待支付、成功和失败的支付记录。
+
+返回结果中的 status 表示订单状态，状态值及其含义与 `skin/order/orders` 接口中的 status 字段相同，详情请参考 `skin/order/orders` 接口。
+
++ Parameters
+
+    + no = `1` (<int>, optional, `11`) ... 从第几个支付记录开始获取，第一条支付记录的 no 为 1
+    + limit = `10` (<int>, optional, `10`) ... 要获取的支付记录的数量，每次最多只能获取 100 条支付记录
+    + identifier (<string>, optional, `com.example.application`) ... 如果不传此参数，则返回所有支付记录，否则只返回指定主题的购买支付记录
+    + order = `asc` (<int>, optional, `desc`) ... 支付记录列表按照创建时间排列，可以用这个参数指定是升序排列还是降序排列，可选值为 _asc_ 或 _desc_
+
++ Request (application/x-www-form-urlencoded)
+
+    + Header
+    
+            Cookie: sid=l2o23e1ntv3e01nt9qesdnrhp7
+            
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "code": 0,
+                "message": "操作成功",
+                "data": {
+                    "count": 1,
+                    "no": 1,
+                    "limit": 10,
+                    "payments": [
+                       {
+                            "order_id": "26",       /** 支付记录对应的订单号 **/
+                            "gateway": "alipay",    /** 支付平台 **/
+                            "price": 3.99,          /** 应付款 **/
+                            "amount": 0,            /** 实收款 **/
+                            "ctime": 1415168390,    /** 支付记录创建时间，UNIX 时间戳 **/
+                            "mtime": 1415168390,    /** 支付记录最后修改时间，UNIX 时间戳 **/
+                            "status": "init",       /** 支付记录状态 **/
+                            "identifier": "com.example.myapplication2", /** 支付记录对应的主题的标识符 **/
+                            "version": "1.0"        /** 支付记录对应的主题的版本 **/
+                        }
+                    ]
+                }
+            }
+
+
+
 
 # Group 用户相关（User）
 
